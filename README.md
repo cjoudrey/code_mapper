@@ -44,7 +44,7 @@ end
 You can also limit the tracing to a specific lexical scope using `start_at`:
 
 ```ruby
-CodeMapper.trace(filter: /^Dog\./, start_at: /^Dog.bark/) do
+CodeMapper.trace(filter: /^Dog\./, start_at: 'Dog.bark') do
   dog = Dog.new # won't get outputted
   dog.bark # will get outputted and all Dog.* calls made within Dog.bark
   Dog.new # will get outputted

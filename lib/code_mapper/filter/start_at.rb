@@ -41,12 +41,12 @@ module CodeMapper
       end
 
       def matches?(class_and_method)
-#        case @start_matcher
-#        when RegExp
+        case @start_matcher
+        when Regexp
           (@start_matcher =~ class_and_method) != nil
-#        when String
-#          @start_matcher == class_and_method
-#        end
+        when String
+          @start_matcher == class_and_method
+        end
       end
     end
   end
