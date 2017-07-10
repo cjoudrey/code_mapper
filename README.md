@@ -4,6 +4,8 @@ CodeMapper is a tool to generate call graphs from your Ruby code.
 
 I built this tool in order to familiarize myself with new Ruby codebases. You can read all about it [here](https://medium.com/@cjoudrey/familiarizing-myself-with-a-new-codebase-using-rubys-tracepoint-and-graphviz-aebd5d6ac2cd).
 
+![](https://github.com/cjoudrey/code_mapper/raw/master/sample-graph.png)
+
 ## Installation
 
 Add this line to your application's Gemfile:
