@@ -1,8 +1,8 @@
 # CodeMapper
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/code_mapper`. To experiment with that code, run `bin/console` for an interactive prompt.
+CodeMapper is a tool to generate call graphs from your Ruby code.
 
-TODO: Delete this and the text above, and describe your gem
+I built this tool in order to familiarize myself with new Ruby codebases. You can read all about it [here](https://medium.com/@cjoudrey/familiarizing-myself-with-a-new-codebase-using-rubys-tracepoint-and-graphviz-aebd5d6ac2cd).
 
 ## Installation
 
@@ -22,17 +22,69 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Generating a call graph and outputting as text to STDOUT:
 
-## Development
+```ruby
+CodeMapper.trace do
+  # Code to trace
+end
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+You can limit what classes and methods are outputted using `filter`:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+CodeMapper.trace(filter: /^Dog\./) do
+  Dog.new # will get outputted
+  Cat.new # won't get outputted
+end
+```
+
+You can also limit the tracing to a specific lexical scope using `start_at`:
+
+```ruby
+CodeMapper.trace(filter: /^Dog\./, start_at: /^Dog.bark/) do
+  dog = Dog.new # won't get outputted
+  dog.bark # will get outputted and all Dog.* calls made within Dog.bark
+  Dog.new # will get outputted
+  Cat.new # won't get outputted
+end
+```
+
+You can limit the depth of the call graph using `max_depth`:
+
+```ruby
+CodeMapper.trace(max_depth: 3) do
+  # Code to trace - only first 3 levels will be outputted
+end
+```
+
+By default, the call graph will be outputted as text to `STDOUT`.
+
+However you can output the call graph to any `IO`:
+
+```ruby
+CodeMapper.trace(output: CodeMapper::Output::Text.new($STDERR)) do
+  # Code to trace
+end
+```
+
+CodeMapper is also capable of outputting `dot` graphs which can be converted to an image using [`graphviz`](http://graphviz.org):
+
+```ruby
+file = File.open('graph.dot', 'w')
+CodeMapper.trace(output: CodeMapper::Output::Dot.new(file)) do
+  # Code to trace
+end
+file.close
+```
+
+```
+$ dot -Tpng graph.dot > graph.png
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/Christian Joudrey/code_mapper. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/cjoudrey/code_mapper. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
