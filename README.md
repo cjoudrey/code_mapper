@@ -47,7 +47,7 @@ You can also limit the tracing to a specific lexical scope using `start_at`:
 CodeMapper.trace(filter: /^Dog\./, start_at: 'Dog.bark') do
   dog = Dog.new # won't get outputted
   dog.bark # will get outputted and all Dog.* calls made within Dog.bark
-  Dog.new # will get outputted
+  Dog.new # won't get outputted
   Cat.new # won't get outputted
 end
 ```
@@ -56,7 +56,7 @@ You can limit the depth of the call graph using `max_depth`:
 
 ```ruby
 CodeMapper.trace(max_depth: 3) do
-  # Code to trace - only first 3 levels will be outputted
+  # Only first 3 levels will be outputted
 end
 ```
 
@@ -65,7 +65,7 @@ By default, the call graph will be outputted as text to `STDOUT`.
 However you can output the call graph to any `IO`:
 
 ```ruby
-CodeMapper.trace(output: CodeMapper::Output::Text.new($STDERR)) do
+CodeMapper.trace(output: CodeMapper::Output::Text.new($stderr)) do
   # Code to trace
 end
 ```
